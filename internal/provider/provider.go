@@ -27,7 +27,7 @@ func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
 		p := &schema.Provider{
 			DataSourcesMap: map[string]*schema.Resource{
-				"command_data_source": dataSourceCommand(),
+				"command": dataSourceCommand(),
 			},
 		}
 

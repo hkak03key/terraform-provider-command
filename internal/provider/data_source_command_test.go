@@ -1,32 +1,110 @@
 package provider
 
 import (
+	"fmt"
 	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccDataSourceCommand(t *testing.T) {
-	t.Skip("data source not yet implemented, remove this once you add your own code")
+//-----------------------------------------
+const testAccDataSourceCommand_basic = `
+data "command" "test" {
+  command = ["echo", "Hello", "world."]
+}
+`
 
+func TestAccDataSourceCommand_basic(t *testing.T) {
 	resource.UnitTest(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: providerFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceCommand,
+				Config: testAccDataSourceCommand_basic,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestMatchResourceAttr(
-						"data.command_data_source.foo", "sample_attribute", regexp.MustCompile("^ba")),
+					resource.TestCheckNoResourceAttr(
+						"data.command.test", "stdin"),
+					resource.TestCheckResourceAttr(
+						"data.command.test", "trim_space", "true"),
+					resource.TestCheckResourceAttr(
+						"data.command.test", "stdout", "Hello world."),
 				),
 			},
 		},
 	})
 }
 
-const testAccDataSourceCommand = `
-data "command_data_source" "foo" {
-  sample_attribute = "bar"
+const testAccDataSourceCommand_stdin = `
+data "command" "test" {
+  command = ["sh", "-c", "echo $(tee)"]
+  stdin   = "Test for stdin."
 }
 `
+
+func TestAccDataSourceCommand_stdin(t *testing.T) {
+	resource.UnitTest(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: providerFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDataSourceCommand_stdin,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(
+						"data.command.test", "stdout", "Test for stdin."),
+				),
+			},
+		},
+	})
+}
+
+//-----------------------------------------
+const testAccDataSourceCommand_unknownCommand = `
+data "command" "test" {
+  command = ["this-is-unknown-command"]
+}
+`
+
+func TestAccDataSourceCommand_unknownCommand(t *testing.T) {
+	resource.UnitTest(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: providerFactories,
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccDataSourceCommand_unknownCommand,
+				ExpectError: regexp.MustCompile("."),
+			},
+		},
+	})
+}
+
+//-----------------------------------------
+const testAccDataSourceCommand_trimSpace = `
+data "command" "test" {
+  command    = ["echo", "\n	Test for trim_space.\r \t"]
+  trim_space = %s
+}
+`
+
+func TestAccDataSourceCommand_trimSpace(t *testing.T) {
+	resource.UnitTest(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: providerFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(testAccDataSourceCommand_trimSpace, "true"),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(
+						"data.command.test", "stdout", "Test for trim_space."),
+				),
+			},
+			{
+				Config: fmt.Sprintf(testAccDataSourceCommand_trimSpace, "false"),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestMatchResourceAttr(
+						"data.command.test", "stdout", regexp.MustCompile("^\\s+Test for trim_space\\.\\s+$")),
+				),
+			},
+		},
+	})
+}
