@@ -1,3 +1,3 @@
-provider "scaffolding" {
+provider "command" {
   # example configuration here
 }

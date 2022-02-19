@@ -1,3 +1,3 @@
-data "scaffolding_data_source" "example" {
+data "command_data_source" "example" {
   sample_attribute = "foo"
 }
