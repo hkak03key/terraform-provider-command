@@ -23,7 +23,7 @@ output "example" {
 
 ### Required
 
-- **command** (List of String) execute command and args.
+- **command** (List of String) execute command and args.  
 NOTE: This will 2nd or later args of exec.CommandContext().
 
 ### Optional
