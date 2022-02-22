@@ -1,3 +1,8 @@
+## 0.1.1 (2022-2-23)
+### BUG FIXES:
+- release actions was failed: upgrade golang for release actions (#10)
+
+
 ## 0.1.0 (2022-2-22)
 ### Features
 - new data-source: `command` (#2)
