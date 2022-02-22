@@ -35,6 +35,36 @@ func TestAccDataSourceCommand_basic(t *testing.T) {
 	})
 }
 
+//-----------------------------------------
+const testAccDataSourceCommand_multiple = `
+data "command" "test1" {
+  command = ["echo", "1"]
+}
+
+data "command" "test2" {
+  command = ["echo", "2"]
+}
+`
+
+func TestAccDataSourceCommand_multiple(t *testing.T) {
+	resource.UnitTest(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: providerFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDataSourceCommand_multiple,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(
+						"data.command.test1", "stdout", "1"),
+					resource.TestCheckResourceAttr(
+						"data.command.test2", "stdout", "2"),
+				),
+			},
+		},
+	})
+}
+
+//-----------------------------------------
 const testAccDataSourceCommand_stdin = `
 data "command" "test" {
   command = ["sh", "-c", "echo $(tee)"]

@@ -9,8 +9,6 @@ import (
 	"bytes"
 	"os/exec"
 	"strings"
-
-	"github.com/google/uuid"
 )
 
 func dataSourceCommand() *schema.Resource {
@@ -87,10 +85,7 @@ func dataSourceCommandRead(ctx context.Context, d *schema.ResourceData, meta int
 		d.Set("stdout", stdout.String())
 	}
 
-	if d.Id() == "" {
-		id, _ := uuid.NewUUID()
-		d.SetId(id.String())
-	}
+	d.SetId("dummy")
 
 	return nil
 }

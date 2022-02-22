@@ -34,5 +34,5 @@ NOTE: This will 2nd or later args of exec.CommandContext().
 ### Read-Only
 
 - **stdout** (String) stdout.
-- **id** (String) uuid.  <!-- edit manually -->
+- **id** (String) dummy.  <!-- edit manually -->
 
