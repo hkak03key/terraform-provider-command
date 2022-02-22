@@ -20,7 +20,7 @@ func dataSourceCommand() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"command": {
-				Description: "execute command and args.  \nNOTE: This will 2nd or later args of exec.CommandContext().",
+				Description: "execute command and args.  \nNOTE: These will be 2nd or later args of exec.CommandContext().",
 				Type:        schema.TypeList,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
