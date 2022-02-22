@@ -1,26 +1,15 @@
 ---
-page_title: "command Provider"
+page_title: "{{.ProviderShortName}} Provider"
 subcategory: ""
 description: |-
-  
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
 ---
 
-# command Provider
-
+# {{.ProviderShortName}} Provider
+{{ .Description | trimspace }}
 
 ## Example Usage
-```terraform
-terraform {
-  required_providers {
-    command = {
-      source = "hkak03key/command"
-    }
-  }
-}
-
-provider "command" {
-}
-```
+{{ tffile "examples/provider/provider.tf" }}
 
 ## Why not external provider?
 This provider is similar to external provider.

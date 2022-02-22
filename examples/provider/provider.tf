@@ -1,3 +1,10 @@
-provider "scaffolding" {
-  # example configuration here
+terraform {
+  required_providers {
+    command = {
+      source = "hkak03key/command"
+    }
+  }
+}
+
+provider "command" {
 }
