@@ -26,7 +26,7 @@ Please see [official document](https://www.terraform.io/cli/config/config-file).
 
 ## How to Use
 
-Please see [documents]("./docs/").
+Please see [documents](./docs/).
 
 ## Developing the Provider
 
